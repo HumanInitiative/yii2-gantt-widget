@@ -14,7 +14,8 @@ class ApiIndex
 
         $this->setHeader(200);
 
-        if ($pid = $request->getQueryParam('pid')) {
+        $pid = $request->getQueryParam('pid');
+        if ($pid !== null && $pid !== '') {
             $composer = new TaskComposer($pid);
             $json['data'] = $composer->compose();
             $json['link'] = [];

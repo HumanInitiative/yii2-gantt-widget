@@ -1,6 +1,9 @@
 <?php //src/api/BaseController.php
 namespace pkpudev\gantt\api;
 
+use Yii;
+use yii\web\Response;
+
 /**
  * Create Rest Api in Yii2 from scratch
  * 
@@ -21,9 +24,18 @@ trait RestTrait
     protected function setHeader($statusCode)
     {
         $statusMessage = $this->getStatusCodeMessage($statusCode);
-        $statusHeader = "HTTP/1.1 {$statusCode} {$statusMessage}";
-        $contentType = "application/json; charset=utf-8";
+        $contentType = 'application/json; charset=utf-8';
 
+        if (Yii::$app->has('response') && Yii::$app->response instanceof Response) {
+            $response = Yii::$app->response;
+            $response->statusCode = $statusCode;
+            $response->format = Response::FORMAT_RAW;
+            $response->headers->set('Content-Type', $contentType);
+            $response->headers->set('X-Powered-By', 'IT Revo <it.revo@pkpu.org>');
+            return;
+        }
+
+        $statusHeader = "HTTP/1.1 {$statusCode} {$statusMessage}";
         header($statusHeader);
         header("Content-type: {$contentType}");
         header("X-Powered-By: IT Revo <it.revo@pkpu.org>");

@@ -22,14 +22,18 @@ class ApiCreate
         $request = Yii::$app->request;
 
         $post = $request->post();
+        $post = is_array($post) ? $post : [];
         $transformer = new RequestTransformer($this->projectId, $post);
         $model = $transformer->getNewModel();
 
         $trx = Yii::$app->db->beginTransaction();
         try {
             if ($model->save()) {
-                (new PicUpdater($model, (int)$post['pic_id']))->execute();
-                (new ProgressUpdater($model, $post['progress']))->execute();
+                $picId = isset($post['pic_id']) ? (int) $post['pic_id'] : 0;
+                $progress = $post['progress'] ?? null;
+
+                (new PicUpdater($model, $picId))->execute();
+                (new ProgressUpdater($model, $progress))->execute();
                 $trx->commit();
 
                 $this->setHeader(201);
