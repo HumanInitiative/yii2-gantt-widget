@@ -29,12 +29,18 @@ class RequestTransformer
 
     protected function mapping(ProjectWbs $model): ProjectWbs
     {
-        $model->parent_id   = (int)$this->data['parent'];
+        $parent = (int)($this->data['parent'] ?? 0);
+        $text = isset($this->data['text']) ? (string) $this->data['text'] : '';
+        $duration = (int)($this->data['duration'] ?? 0);
+        $startDate = isset($this->data['start_date']) ? (string) $this->data['start_date'] : null;
+        $endDate = isset($this->data['end_date']) ? (string) $this->data['end_date'] : null;
+
+        $model->parent_id   = $parent;
         $model->project_id  = $this->projectId;
-        $model->task_name   = $this->data['text'];
-        $model->duration    = (int)$this->data['duration'];
-        $model->start       = date('Y-m-d', strtotime($this->data['start_date']));
-        $model->finish      = date('Y-m-d', strtotime($this->data['end_date']));
+        $model->task_name   = $text;
+        $model->duration    = $duration;
+        $model->start       = $startDate !== null ? date('Y-m-d', strtotime($startDate)) : null;
+        $model->finish      = $endDate !== null ? date('Y-m-d', strtotime($endDate)) : null;
 
         return $model;
     }

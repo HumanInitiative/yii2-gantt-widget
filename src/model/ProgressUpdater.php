@@ -10,7 +10,7 @@ class ProgressUpdater
     protected $wbsId;
     protected $progress;
 
-    public function __construct(ActiveRecordInterface $model, float $progress)
+    public function __construct(ActiveRecordInterface $model, ?float $progress = null)
     {
         $this->wbsId = (int)$model->id;
         $this->progress = $progress;
@@ -18,7 +18,7 @@ class ProgressUpdater
 
     public function execute(): bool
     {
-        if ($this->progress <= 0) return false;
+        if ($this->progress === null || $this->progress <= 0) return false;
 
         $model = ProjectWbsProgress::find()
             ->where(['wbs_id'=>$this->wbsId])

@@ -21,7 +21,9 @@ class ApiDelete
     {
         $request = Yii::$app->request;
 
-        $transformer = new RequestTransformer($this->projectId, $request->post());
+        $post = $request->post();
+        $post = is_array($post) ? $post : [];
+        $transformer = new RequestTransformer($this->projectId, $post);
         $model = $transformer->getExistingModel($this->taskId);
 
         if ($model->delete()) {

@@ -21,8 +21,8 @@ class WbsProgress
             ->asArray()
             ->one();
         if ($row) {
-            $number = (float)$row['progress'];
-            return number_format($number, 2);
+            $number = (float)($row['progress'] ?? 0);
+            return (float) number_format($number, 2, '.', '');
         }
         return 0.0;
     }

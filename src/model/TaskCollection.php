@@ -17,9 +17,14 @@ use yii\base\BaseObject;
 class TaskCollection extends BaseObject implements IteratorAggregate, Countable
 {
     /**
-     * @var array $tasks
+     * @var array<int, Task> $tasks
      */
-    protected $tasks = [];
+    protected array $tasks = [];
+
+    /**
+     * @var array $data
+     */
+    protected array $data = [];
 
     public function addTask(Task $task)
     {
@@ -38,6 +43,6 @@ class TaskCollection extends BaseObject implements IteratorAggregate, Countable
 
     public function exists()
     {
-        return !empty($this->data);
+        return $this->count() > 0;
     }
 }
